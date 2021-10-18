@@ -49,11 +49,7 @@ jobs:
           at: /tmp
       - run:
           name: Deploy app
-          command: HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
-                    if [ "$HTTPCODE" -ne 200 ];then
-                    echo "heroku app not responding, failing deploy"
-                    exit 1
-                    fi
+          command: echo false
   back-test-unit:
     <<: *shared-config
     steps:
@@ -114,11 +110,12 @@ jobs:
           command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:master
       - run:
           name: Smoke Test
-          command: HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
-                    if [ "$HTTPCODE" -ne 200 ];then
-                    echo "heroku app not responding, failing deploy"
-                    exit 1
-                    fi
+          command: |
+          HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
+          if [ "$HTTPCODE" -ne 200 ];then
+            echo "heroku app not responding, failing deploy"
+          exit 1
+          fi
 
 workflows:
   version: 2
