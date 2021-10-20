@@ -47,9 +47,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
-      - run:
-          name: Intall netlify
-          command: yarn add netlify-cli -D
+      - run: yarn add netlify-cli -D
       - run:
           name: Deploy app
           command: yarn netlify deploy --prod --dir=/tmp/server-doc
@@ -102,7 +100,6 @@ jobs:
             # docker push $DOCKER_HUB_USER_ID/my-awesome-ci-expr:$CIRCLE_BUILD_NUM
             # docker push $DOCKER_HUB_USER_ID/my-awesome-ci-expr:latest
             echo true
-
   back-deploy-heroku:
     docker:
       - image: buildpack-deps:trusty
@@ -110,7 +107,7 @@ jobs:
       - checkout
       - run:
           name: Heroku Deploy
-          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:master
+          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:main
       - run:
           name: Smoke Test
           command: |
@@ -119,7 +116,6 @@ jobs:
               echo "heroku app not responding, failing deploy"
             exit 1
             fi
-
 workflows:
   version: 2
   build-test-and-lint:
